@@ -12,15 +12,6 @@ const api_pro = '/api/job/project'
 
 const api = {
 
-    updateAvatar(data){
-        return service({
-            url:`/api/job/user/avatar`,
-            method:'put',
-            data:data
-        })
-        
-    },
-
     getResumeByUserId(id){
         return service({
             url:`${api_resume}/user/${id}`,

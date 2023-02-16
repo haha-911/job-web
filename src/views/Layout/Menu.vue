@@ -35,7 +35,7 @@
                             <el-dropdown-item command="myresume">我的简历</el-dropdown-item>
                             <el-dropdown-item command="apply">我的投递</el-dropdown-item>
                             <el-dropdown-item command="favor">我的收藏</el-dropdown-item>
-                            <el-dropdown-item command="accountset">账号设置</el-dropdown-item>
+                            <el-dropdown-item command="setting">账号设置</el-dropdown-item>
                             <el-dropdown-item command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -81,9 +81,13 @@ export default {
 
         // 获取用户信息
         const getUserInfo=()=>{
-         const hh = sessionStorage.getItem('userInfo')
-            userInfo.value = JSON.parse(hh)
+            const hh = sessionStorage.getItem('userInfo')
+            if(hh){
+                userInfo.value = JSON.parse(hh)
             isLogin.value = true 
+            }
+       
+            
         }
         // 下拉菜单点击事件
         const handleCommand = (command) => {
@@ -100,8 +104,8 @@ export default {
             if (command == 'favor') {
                 router.push('/favor')
             }
-            if (command == 'accountset') {
-                router.push('/accountset')
+            if (command == 'setting') {
+                router.push('/setting')
             }
         }
 

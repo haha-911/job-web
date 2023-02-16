@@ -38,6 +38,12 @@ const routes = [
       meta:{title:"我的简历"}
      },
      {
+      path: '/setting',
+      name: 'setting',
+      component: () => import('@/views/Dropdown/setting'),
+      meta:{title:"账号设置"}
+     },
+     {
       path: '/recruit',
       name: 'recruit',
       component: () => import('@/views/Dropdown/recruit'),

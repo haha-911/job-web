@@ -449,7 +449,7 @@
         <div class="grid-content ep-bg-purple" />
 
         <div class="notity">
-            <Notify></Notify>
+          <Notify></Notify>
         </div>
       </el-col>
 
@@ -482,8 +482,8 @@
 
       <!-- 编辑头像 -->
       <el-dialog v-model="avatarVisible" title="上传头像" width="30%">
-        <el-upload class="avatar-uploader" action="/api/file/upload" :headers="headerObject"
-          :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+        <el-upload class="avatar-uploader" action="/api/file/upload" :headers="headerObject" :show-file-list="false"
+          :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="upload-avatar" />
           <el-icon v-else class="avatar-uploader-icon">
             <Plus />
@@ -507,12 +507,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onMounted } from '@vue/runtime-core'
 import { bus } from 'vue3-eventbus'
 import api from '@/api/resume'
+import user from '@/api/user'
 import Notify from '@/views/Dropdown/notify'
 import { markRaw } from 'vue'
 import { Delete } from '@element-plus/icons-vue'
 export default {
-  components:{
-Notify
+  components: {
+    Notify
   },
 
   setup() {
@@ -535,7 +536,7 @@ Notify
     const headerObject = {
       token: sessionStorage.getItem("token")
     }
-    const userInfo = {}
+    const userInfo = ref({})
     // 学历列表
     const options = [
       {
@@ -591,7 +592,6 @@ Notify
 
     const state = reactive({
       resumeInfo,
-      userInfo,
       baseForm,
     })
 
@@ -670,30 +670,30 @@ Notify
     function updateAvatar() {
       tf.avatarVisible = true
     }
-    
+
 
     function handleAvatar() {
       tf.avatarVisible = false
 
       const requestData = {
-        id : state.userInfo.id,
+        id: userInfo.value.id,
         avatar: imageUrl.value
       }
-      api.updateAvatar(requestData).then((result) => {
+      user.updateAvatar(requestData).then((result) => {
         ElMessage.success("上传成功！审核中。。")
       }).catch((err) => {
-        
+
       });
     }
 
-    function handleAvatarSuccess(respose){
-        console.log(respose);
-        imageUrl.value = respose.msg
+    function handleAvatarSuccess(respose) {
+      console.log(respose);
+      imageUrl.value = respose.msg
     }
 
     //添加简历基本信息，只有新用户才可以
     function addResumeInfo() {
-      state.baseForm.userId = state.userInfo.id
+      state.baseForm.userId = userInfo.value.id
       api.addResumeInfo(state.baseForm).then((result) => {
         ElMessage.success(result.msg)
         getResumeById()
@@ -731,7 +731,7 @@ Notify
       if (!tf.isFirst) {
 
         console.log(state.baseForm);
-        state.baseForm.userId = state.userInfo.id
+        state.baseForm.userId = userInfo.value.id
         state.baseForm.id = state.resumeInfo.id
 
         api.updateResumeInfo(state.baseForm).then((result) => {
@@ -956,7 +956,7 @@ Notify
     function updateAbility() {
       const requestData = {
         id: state.resumeInfo.id,
-        userId: state.userInfo.id,
+        userId: userInfo.value.id,
         ability: form.value
       }
 
@@ -979,7 +979,7 @@ Notify
 
       const requestData = {
         id: state.resumeInfo.id,
-        userId: state.userInfo.id,
+        userId: userInfo.value.id,
         personalSummary: form.value
       }
 
@@ -1001,7 +1001,7 @@ Notify
 
       const requestData = {
         id: state.resumeInfo.id,
-        userId: state.userInfo.id,
+        userId: userInfo.value.id,
         jobIntention: form.value
       }
 
@@ -1026,10 +1026,7 @@ Notify
 
     // 根据登录用户获取简历信息
     function getResumeById() {
-
-      getUserInfo()
-      api.getResumeByUserId(state.userInfo.id).then((result) => {
-
+      api.getResumeByUserId(userInfo.value.id).then((result) => {
         if (result.data == null) {
           tf.isFirst = true
           tf.dialogVisible = true
@@ -1048,14 +1045,16 @@ Notify
 
     // 获取登录的用户信息
     function getUserInfo() {
-      const hh = sessionStorage.getItem('userInfo')
-      if (hh) {
-        state.userInfo = JSON.parse(hh)
-      }
+      user.getUserInfo().then((result) => {
+        userInfo.value = result.data
+        getResumeById()
+    }).catch((err) => {
+        
+    });
     }
 
     onMounted(() => {
-      getResumeById()
+      getUserInfo()
       handleScroll()
     })
 
@@ -1063,10 +1062,12 @@ Notify
     return {
       ...toRefs(tf),
       ...toRefs(state),
+      userInfo,
       project,
       education,
       experience,
       imageUrl,
+      getUserInfo,
       form,
       options,
       headerObject,
@@ -1102,17 +1103,17 @@ Notify
 </script>
 
 <style lang="less" scoped>
-
-.notity{
+.notity {
   width: 100%;
   border-radius: 10px;
   background-color: #fff;
 }
 
-.upload-avatar{
+.upload-avatar {
   width: 200px;
   height: 120px;
 }
+
 .common {
   width: 100%;
   height: auto;
