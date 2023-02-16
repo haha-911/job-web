@@ -1,10 +1,7 @@
 <<<<<<< HEAD
-# veu-job
-### 测试
-=======
-<<<<<<< HEAD
-# project01
-
+# 求职招聘前台系统
+### 开发者beibeiAunt 
+### 时间：2022.12.03
 ## Project setup
 ```
 npm install
@@ -22,9 +19,3 @@ npm run build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-=======
-# veu-job
-### 测试
->>>>>>> origin/main
->>>>>>> dd9fce7 (first commit)
-# job-web
