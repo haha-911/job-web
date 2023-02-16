@@ -28,7 +28,7 @@
             </div>
             <div class="nickname">
                 <h3>密码设置</h3>
-                <p>当前用户:{{userInfo.username}}</p>
+                <p>登录用户:{{userInfo.username}}</p>
                 <button @click="editPwd">修改密码</button>
             </div>
         </div>
@@ -79,7 +79,7 @@ const tf = reactive({
     dialogVisible: false,
     isEmail:false,
     isPwd:false,
-    isName:true,
+    isName:false,
     isTel:false,
     needFixed:false,
 })
@@ -272,6 +272,7 @@ onMounted(()=>{
         width: 180px;
         height: 50px;
         line-height: 50px;
+        cursor: pointer;
     }
 
     span:hover {

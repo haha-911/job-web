@@ -454,7 +454,7 @@
       </el-col>
 
       <!-- 新用户首次需填写信息/编辑基本信息 -->
-      <el-dialog v-model="dialogVisible" title="添加基本信息" width="30%" center :before-close="handleClose">
+      <el-dialog v-model="dialogVisible" :title="title" width="30%" center :before-close="handleClose">
         <el-form :model="baseForm">
           <el-form-item label="居住地" label-width="80px">
             <el-input v-model="baseForm.home" autocomplete="off" />
@@ -464,8 +464,8 @@
           </el-form-item>
           <el-form-item label="性别" label-width="80px">
             <el-radio-group v-model="baseForm.sex" class="ml-4">
-              <el-radio label="0" size="large">男</el-radio>
-              <el-radio label="1" size="large">女</el-radio>
+              <el-radio label=0 size="large">男</el-radio>
+              <el-radio label=1 size="large">女</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -533,6 +533,7 @@ export default {
     }
     const imageUrl = ref('')
 
+    const title = ref('修改基本信息')
     const headerObject = {
       token: sessionStorage.getItem("token")
     }
@@ -919,6 +920,7 @@ export default {
 
     // 修改简历基本信息
     const updateResumeInfo = () => {
+      title.value = '修改简历基本信息'
       tf.isFirst = false
       tf.dialogVisible = true
       state.baseForm.age = state.resumeInfo.age
@@ -1028,6 +1030,7 @@ export default {
     function getResumeById() {
       api.getResumeByUserId(userInfo.value.id).then((result) => {
         if (result.data == null) {
+          title.value = "添加基本信息"
           tf.isFirst = true
           tf.dialogVisible = true
           ElMessage.warning("请添加个人基本信息")
@@ -1062,6 +1065,7 @@ export default {
     return {
       ...toRefs(tf),
       ...toRefs(state),
+      title,
       userInfo,
       project,
       education,

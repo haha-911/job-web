@@ -1,7 +1,7 @@
 <template>
-  <h3>dsffsfddsfsf</h3>
-  <h3>dsffsfddsfsf</h3>
-  <h3>dsffsfddsfsf</h3> <h3>dsffsfddsfsf</h3>
+  <div class="hh">
+    <h3>待开发区域</h3>
+  </div>
   
 </template>
 
@@ -12,5 +12,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.hh{
+  height: 200px;
+  margin:auto;
+  h3{
+    line-height: 100px;
+  }
+}
 
 </style>

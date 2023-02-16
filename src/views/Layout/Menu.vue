@@ -5,19 +5,7 @@
                 <a href="#" @click="returnIndex"><img src="../../assets/navlogo.png" alt="" class="logoimg"></a>
                 <el-menu-item index="/" style="margin-left:20px;">首页</el-menu-item>
                 <el-menu-item index="/position">职位</el-menu-item>
-                <el-sub-menu index="3">
-                    <template #title>Workspace</template>
-                    <el-menu-item index="3-1">item one</el-menu-item>
-                    <el-menu-item index="3-2">item two</el-menu-item>
-                    <el-menu-item index="3-3">item three</el-menu-item>
-                    <el-sub-menu index="3-4">
-                        <template #title>item four</template>
-                        <el-menu-item index="3-4-1">item one</el-menu-item>
-                        <el-menu-item index="3-4-2">item two</el-menu-item>
-                        <el-menu-item index="3-4-3">item three</el-menu-item>
-                    </el-sub-menu>
-                </el-sub-menu>
-                <el-menu-item index="3" >我是招聘者</el-menu-item>
+                <el-menu-item index="/hrindex" >我是招聘者</el-menu-item>
                 <div style="width:350px;height:100%"></div>
                 <el-menu-item index="/login" v-if="!isLogin">登录/注册</el-menu-item>
 
