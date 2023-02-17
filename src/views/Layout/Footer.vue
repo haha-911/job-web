@@ -3,7 +3,7 @@
             <div style="height:30px"></div>
             <el-row  style="margin-top:30px">
                 <el-col :span="8" class="left-col"><div class="grid-content ep-bg-purple" />
-                <div><img src="../../assets/navlogo.png" alt="" style="height:36px;width:97px;float:left"/></div>
+                <div><img src="../../assets/joblogo.png" alt="" style="height:36px;width:97px;float:left"/></div>
                 <div style="margin-top:60px">
                 <p>企业服务热线和算法推荐/未成年人举报渠道：</p>
                 <p><b>15036242563</b></p>

@@ -5,7 +5,6 @@
                 <a href="#" @click="returnIndex"><img src="../../assets/navlogo.png" alt="" class="logoimg"></a>
                 <el-menu-item index="/" style="margin-left:20px;">首页</el-menu-item>
                 <el-menu-item index="/position">职位</el-menu-item>
-                <el-menu-item index="/hrindex" >我是招聘者</el-menu-item>
                 <div style="width:350px;height:100%"></div>
                 <el-menu-item index="/login" v-if="!isLogin">登录/注册</el-menu-item>
 

@@ -83,7 +83,7 @@
               <el-image :src="item.avatar" alt class="position-avator"/>
               <!-- <img src="../../assets/baseavatar.jpg" alt class="position-avator" /> -->
               <br>
-              <span style="margin-top:15px">{{ item.hrName }}</span>
+              <span style="margin-top:15px">{{ item.nickName }}</span>
             </div>
           </li>
 
@@ -348,8 +348,8 @@ export default {
 
 
 .hasFixed {
-  margin-left: 190px;
-  width: 750px;
+  margin-left: 184px;
+  width: 729px;
   position: fixed;
   top: 0;
   left: 0;

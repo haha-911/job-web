@@ -99,7 +99,7 @@
               <el-image :src="item.avatar" alt class="position-avator"></el-image>
               <!-- <img src="../../assets/baseavatar.jpg" alt class="position-avator" />-->
               <br> 
-              <span style="margin-top:15px">{{ item.hrName }}</span>
+              <span style="margin-top:15px">{{ item.nickName }}</span>
             </div>
           </li>
 

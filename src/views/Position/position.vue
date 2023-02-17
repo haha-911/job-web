@@ -32,8 +32,8 @@
           <!-- <img src="../../assets/baseavatar.jpg" alt="" class="img" /> -->
           <el-image :src="positionInfo.avatar" class="img"></el-image>
           <div class="username">
-            <p>{{ positionInfo.hrName }}</p>
-            <p>{{positionInfo.nickName}}</p>
+            <p>{{ positionInfo.nickName }}</p>
+            <p>{{positionInfo.email}}</p>
           </div>
         </div>
 

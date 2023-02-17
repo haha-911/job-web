@@ -83,13 +83,7 @@ const routes = [
     component: () => import('@/views/Login/index'),
     meta:{title:"用户登录/注册"}
    
-  },
-  {
-    path: '/hrindex',
-    name: 'hrindex',
-    component: () => import('@/views/HR/index'),
-    meta:{title:"HR管理页面"}
-   },
+  }
 ]
 
 const router = createRouter({
