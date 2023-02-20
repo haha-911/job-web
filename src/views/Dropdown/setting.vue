@@ -10,7 +10,6 @@
         </div>
 
         <div class="s-right">
-
             <div class="nickname">
                 <h3>我的昵称</h3>
                 <p>当前昵称:{{userInfo.nickname}}</p>

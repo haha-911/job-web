@@ -25,6 +25,12 @@ const api = {
             url:`${api_name}/getUser`,
             method:'post'
         })
+    },
+    getHRInfo(){
+        return service({
+            url:`${api_name}/getHR`,
+            method:'post'
+        })
     }
    
 }

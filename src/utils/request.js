@@ -7,10 +7,6 @@ const service = axios.create({
     timeout: 5000
 })
 
-
-
-
-
 service.interceptors.request.use(
     config => {
     let token=sessionStorage.getItem("token");
@@ -19,6 +15,7 @@ service.interceptors.request.use(
     }
         return config;
     },
+   
     error => {
         console.log(error);
         return Promise.reject();

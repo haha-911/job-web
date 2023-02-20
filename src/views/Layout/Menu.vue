@@ -2,12 +2,12 @@
         <div>
             <el-menu :default-active="route.path" class="el-menu-demo elmenu" mode="horizontal"
                 background-color="#212329" text-color="#fff"  active-text-color="#ff6400" @select="handleSelect" router>
-                <a href="#" @click="returnIndex"><img src="../../assets/navlogo.png" alt="" class="logoimg"></a>
+                <a href="#" @click="returnIndex"><img src="../../assets/liepin.png" alt="" class="logoimg"></a>
                 <el-menu-item index="/" style="margin-left:20px;">首页</el-menu-item>
                 <el-menu-item index="/position">职位</el-menu-item>
+                <span @click="hrLogin" class="hr-login">我是HR</span>
                 <div style="width:350px;height:100%"></div>
                 <el-menu-item index="/login" v-if="!isLogin">登录/注册</el-menu-item>
-
                  <!--  -->
                  <div class="notify" v-if="isLogin">
                     <el-icon color="#fff" size="20"><Bell /></el-icon>
@@ -66,6 +66,15 @@ export default {
             router.push("/")
         }
 
+        const hrLogin= ()=>{
+            router.push({
+                name:'login',
+                query:{
+                    type:3
+                }
+            })
+        }
+
         // 获取用户信息
         const getUserInfo=()=>{
             const hh = sessionStorage.getItem('userInfo')
@@ -110,6 +119,7 @@ export default {
             router,
             isLogin,
             userInfo,
+            hrLogin,
             getUserInfo,
             returnIndex,
             handleCommand,
@@ -176,12 +186,17 @@ export default {
     }
 }
 
-
-
 .logoimg {
     width: 97px;
     height: 36px;
     margin-top: 10px;
     margin-left: 150px;
+}
+
+.hr-login{
+    color: #fff;
+    line-height: 57px;
+    width: 100px;
+    cursor: pointer;
 }
 </style>

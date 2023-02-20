@@ -1,5 +1,10 @@
 <template>
+
   <div class="layout">
+    <div class="loginType">
+      <h2 v-if="type == 3">我是HR</h2>
+      <h2 v-else>我是用户</h2>
+    </div >
 
     <div class="text">
       <span @click="isLogin = true; isAgree = false" :class="{'hover-text':isLogin}">登录</span>
@@ -35,7 +40,6 @@
 
       </form>
       <button @click="register">注册</button>
-
       <el-row>
         <el-checkbox class="checkBox" v-model="isAgree" name="type">同意用户使用准则</el-checkbox>
       </el-row>
@@ -47,7 +51,9 @@
 import { reactive, toRefs } from "@vue/reactivity";
 import { ElMessage } from "element-plus";
 import api from '@/api/login'
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { onMounted } from '@vue/runtime-core';
+
 export default {
 
   setup() {
@@ -59,6 +65,7 @@ export default {
     const loginForm = reactive({
       name: "",
       pwd: "",
+      type:'',
     });
 
     const registreForm = reactive({
@@ -71,6 +78,7 @@ export default {
     });
 
     const Router = useRouter()
+    const Route = useRoute()
     // 登录
     function login() {
 
@@ -83,23 +91,21 @@ export default {
         return
       }
 
-      loginForm.type = 4
-
       api.login(loginForm).then((result) => {
-
         const token = result.data
         ElMessage.success(result.msg)
         sessionStorage.setItem("token",token)
-        getUserInfo()       
-        
-
+        if(loginForm.type == 4){
+          getUserInfo()
+        }else{
+          getHRInfo()
+        }
       }).catch((err) => {
 
       });
     }
     // 注册
     function register() {
-
       if (registreForm.username == '' || registreForm.password == '' || registreForm.email == '' || registreForm.confirmPassword == '') {
         ElMessage.error("请填完整注册表单")
         return
@@ -113,12 +119,11 @@ export default {
         ElMessage.error("请勾选阅读协议")
         return
       }
-      registreForm.type = 4
+      registreForm.type = loginForm.type
 
       api.registry(registreForm).then((result) => {
         ElMessage.success(result.msg)
         state.isLogin = true
-
         Object.keys(registreForm).map(key => {
           delete registreForm[key]
         })
@@ -149,13 +154,41 @@ export default {
       });
     }
 
+    // 获取登录HR信息
+    function getHRInfo(){
+      api.getHRInfo().then((result) => {
+        const userInfo = JSON.stringify(result.data)
+        sessionStorage.setItem('userInfo',userInfo)
+        Router.push("/hrindex")
+      }).catch((err) => {
+        
+      });
+    }
+
+    function getType(){
+      const type =Route.query.type
+      if(type){
+        loginForm.type = type
+      }else{
+        loginForm.type = 4
+      }
+
+    }
+
+    onMounted(()=>{
+         getType()
+    })
+
     return {
       ...toRefs(loginForm),
       ...toRefs(registreForm),
       ...toRefs(state),
+      getType,
+      Route,
       login,
       register,
-      getUserInfo
+      getUserInfo,
+      getHRInfo,
     };
   },
 }

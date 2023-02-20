@@ -19,7 +19,6 @@
               <el-tooltip class="box-item" effect="light" content="点击修改头像" placement="left">
                 <el-image :src="userInfo.avatar" class="img" @click="updateAvatar"></el-image>
               </el-tooltip>
-
             </div>
             <div class="avatar-right">
               <div class="username">
@@ -675,7 +674,6 @@ export default {
 
     function handleAvatar() {
       tf.avatarVisible = false
-
       const requestData = {
         id: userInfo.value.id,
         avatar: imageUrl.value

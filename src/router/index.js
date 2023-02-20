@@ -83,7 +83,36 @@ const routes = [
     component: () => import('@/views/Login/index'),
     meta:{title:"用户登录/注册"}
    
-  }
+  },
+  {
+    path: '/hrindex',
+    name: 'hrindex',
+    component: () => import('@/views/HR/index'),
+    meta:{title:"HR页面"},
+    children:[
+      {
+        path: '/hrindex',
+        name: 'hinfo',
+        component: () => import('@/views/HR/hrInfo'),
+      },
+      {
+        path: '/happly',
+        name: 'happly',
+        component: () => import('@/views/HR/happly'),
+      },
+      {
+        path: '/hposition',
+        name: 'hposition',
+        component: () => import('@/views/HR/position'),
+      },
+      {
+        path: '/hinter',
+        name: 'hinter',
+        component: () => import('@/views/HR/hinterview'),
+      }
+    ]
+  },
+
 ]
 
 const router = createRouter({

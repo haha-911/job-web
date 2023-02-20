@@ -268,6 +268,7 @@ export default{
       const requestData = {
         positionId:state.positionInfo.id,
         companyId:state.positionInfo.companyId,
+        resumeId:state.userInfo.resumeId,
         userId:state.userInfo.id,
         hrId:state.positionInfo.hrId,
       }
