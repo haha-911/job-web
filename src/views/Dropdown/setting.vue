@@ -42,7 +42,12 @@
                     <el-input v-model="form.tel" />
                 </el-form-item>
                 <el-form-item label="电子邮箱" prop="email" v-if="tf.isEmail">
-                    <el-input v-model="form.email" />
+                    <el-input v-model="form.email" style="width:254px;" />
+                    
+                </el-form-item>
+                <el-form-item label="验证码" prop="code" v-if="tf.isEmail">
+                    <el-input v-model="form.code" style="width:140px"/>
+                    <el-button @click="getCode" style="margin-left:10px">{{content}}</el-button>
                 </el-form-item>
                 <el-form-item label="旧密码" prop="oldPwd" v-if="tf.isPwd">
                     <el-input v-model="form.oldPwd" type="password" autocomplete="off" />
@@ -68,12 +73,15 @@
 import { ref, reactive } from '@vue/reactivity'
 import { ElMessage, FormInstance, FormRules } from 'element-plus'
 import api from '@/api/user'
+import userApi from '@/api/login'
 import { onMounted } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 import { bus } from 'vue3-eventbus'
 
 
 const title = ref('修改昵称')
+
+const content = ref('发送验证码')
 const tf = reactive({
     dialogVisible: false,
     isEmail:false,
@@ -87,6 +95,7 @@ const form = reactive({
     id:0,
     nickname: '',
     email: '',
+    code: '',
     tel: '',
     oldPwd: '',
     newPwd: '',
@@ -138,6 +147,39 @@ const getUserInfo = () =>{
 
 }
 
+const getCode = () =>{
+    if(form.email == null){
+        alert("请输入邮箱地址！")
+        return 
+    }
+    if(!form.email.match(/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)){
+        alert("请输入合法的邮箱地址！")
+        return 
+    }
+
+    console.log(form.email);
+    const email = {
+        email:form.email
+    }
+
+               let totalTime = 60
+               let clock =  window.setInterval(() => {
+                content.value = totalTime + 's后重新发送';
+                totalTime --;
+                if(totalTime < 0){
+                    totalTime = 60;
+                    content.value = "重新发送验证码";
+                    window.clearInterval(clock);
+                }
+            }, 1000);
+            ElMessage.success("验证码已发送！")
+
+    userApi.sendCode(email).then( result =>{
+            ElMessage.success(result.msg)
+    })
+
+}
+
 const validatePass = (rule, value, callback) => {
     if (value === '') {
         callback(new Error('请输入新密码'))
@@ -176,9 +218,8 @@ const rules = reactive({
             trigger: ['blur', 'change'],
         }
     ],
-    oldPwd: [
-        { required: true, message: '请输入旧密码', trigger: 'blur' }
-    ],
+    code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+    oldPwd: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
     newPwd: [{ validator: validatePass, trigger: 'blur' }],
     confirmPwd: [{ validator: validatePass2, trigger: 'blur' }],
 })

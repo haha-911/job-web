@@ -13,6 +13,14 @@ const api = {
             params:data
         })
     },
+    sendCode(data){
+        return service({
+            url:`${api_name}/sendCode`,
+            method:'post',
+            params:data
+        })
+    },
+
     registry(data){
         return service({
             url:`${api_name}/registry`,
