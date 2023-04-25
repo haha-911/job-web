@@ -1,76 +1,74 @@
 <template>
-
   <div class="layout">
 
 
     <div class="left">
-     
+
       <div class="img_local" v-if="type == 3">
         <h2>我是HR</h2>
         <img src="../../assets/loginbg.jpeg" alt="">
-        
+
       </div>
       <div class="img_local" v-else>
         <h2>我是用户</h2>
         <img src="../../assets/loginbg.jpeg" alt="">
       </div>
-      
+
     </div>
 
     <div class="right">
-    
-    <div class="text">
-      <span @click="isLogin = true; isAgree = false" :class="{'hover-text':isLogin}">登录</span>
-      <span @click="isLogin = isAgree = false" :class="{ 'hover-text': !isLogin }">注册</span>
+
+      <div class="text">
+        <span @click="isLogin = true; isAgree = false" :class="{ 'hover-text': isLogin }">登录</span>
+        <span @click=" isLogin = isAgree = false " :class=" { 'hover-text': !isLogin } ">注册</span>
+      </div>
+
+<!-- 登录 -->
+      <div class="lg-style" v-if=" isLogin ">
+        <form action="">
+          <input v-model=" name " placeholder="用户名" />
+          <input v-model=" pwd " placeholder="密码" type="password" autocomplete />
+        </form>
+        <el-row>
+          <el-checkbox class="checkBox" v-model=" isSave " name="type">记住密码</el-checkbox>
+          <p style="margin-top:5px;margin-left:90px">忘记密码？</p>
+        </el-row>
+        <el-row>
+
+        </el-row>
+
+        <button @click=" login ">登录</button>
+
+        <el-row>
+          <el-checkbox class="checkBox" v-model=" isAgree " name="type">同意用户使用准则</el-checkbox>
+        </el-row>
+
+      </div>
+
+<!-- 注册 -->
+      <div class="lg-style" v-if=" !isLogin ">
+        <form action="">
+          <input v-model=" username " placeholder="用户名" />
+          <input v-model=" nickname " placeholder="昵称" />
+          <input v-model=" tel " placeholder="号码" />
+          <input v-model=" email " placeholder="邮箱" />
+          <input v-model=" password " type="password" placeholder="密码" autocomplete />
+          <input v-model=" confirmPassword " placeholder="确认密码" type="password" autocomplete />
+        </form>
+        <button @click=" register ">注册</button>
+        <el-row>
+          <el-checkbox class="checkBox" v-model=" isAgree " name="type">同意用户使用准则</el-checkbox>
+        </el-row>
+
+      </div>
+
     </div>
-
-    <div class="lg-style" v-if="isLogin">
-      <form action="">
-        <input v-model="name" placeholder="用户名" />
-        <input v-model="pwd" placeholder="密码" type="password" autocomplete />
-      </form> 
-      <el-row>
-        <el-checkbox class="checkBox" v-model="isSave" name="type">记住密码</el-checkbox>
-        <p style="margin-top:5px;margin-left:90px">忘记密码？</p>
-      </el-row>
-      <el-row>
-        
-      </el-row>
-
-      <button @click="login">登录</button>
-
-      <el-row>
-        <el-checkbox class="checkBox" v-model="isAgree" name="type">同意用户使用准则</el-checkbox>
-      </el-row>
-
-
-    </div>
-
-    <div class="lg-style" v-if="!isLogin">
-      <form action="">
-
-        <input v-model="username" placeholder="用户名" />
-        <input v-model="nickname" placeholder="昵称" />
-        <input v-model="tel" placeholder="号码" />
-        <input v-model="email" placeholder="邮箱" />
-        <input v-model="password" type="password" placeholder="密码" autocomplete />
-        <input v-model="confirmPassword" placeholder="确认密码" type="password" autocomplete />
-
-      </form>
-      <button @click="register">注册</button>
-      <el-row>
-        <el-checkbox class="checkBox" v-model="isAgree" name="type">同意用户使用准则</el-checkbox>
-      </el-row>
-
-    </div>
-
-  </div>
 
 
   </div>
 </template>
 <script>
-import { reactive, toRefs } from "@vue/reactivity";
+import { reactive, ref, toRefs } from "@vue/reactivity";
 import { ElMessage } from "element-plus";
 import api from '@/api/login'
 import { useRoute, useRouter } from "vue-router";
@@ -88,14 +86,15 @@ export default {
     const loginForm = reactive({
       name: "",
       pwd: "",
-      type:'',
+      type: '',
     });
 
     const registreForm = reactive({
       username: "",
-      nickname:'',
-      tel:'',
+      nickname: '',
+      tel: '',
       email: "",
+      code: '',
       password: "",
       confirmPassword: "",
     });
@@ -113,41 +112,50 @@ export default {
         ElMessage.error("请勾选阅读协议")
         return
       }
+      // 记住密码，下次自动登录
+      if (state.isSave) {
+        const saveLoginInfo = JSON.stringify(loginForm)
+        if (loginForm.type == 3) {
+          localStorage.setItem("hrInfo", saveLoginInfo)
+        } else {
+          localStorage.setItem("userInfo", saveLoginInfo)
+        }
 
-// 记住密码，下次自动登录
-        if(state.isSave){
-          const saveLoginInfo = JSON.stringify(loginForm)
-          localStorage.setItem("userInfo",saveLoginInfo)
-        }else{
-          console.log("我来了");
+      } else {
+        if (loginForm.type == 3) {
+          localStorage.removeItem("hrInfo")
+        } else {
           localStorage.removeItem("userInfo")
         }
+
+      }
 
       // 用户登录
       api.login(loginForm).then((result) => {
         const token = result.data
-        
+
         ElMessage.success(result.msg)
-        sessionStorage.setItem("token",token)
+        sessionStorage.setItem("token", token)
 
         // 按类型跳转首页
-        if(loginForm.type == 4){
+        if (loginForm.type == 4) {
           getUserInfo()
-        }else{
+        } else {
           getHRInfo()
         }
-
-
-      }).catch((err) => {
-
-      });
+      }).catch((err) => { });
     }
     // 注册
     function register() {
-      if (registreForm.username == '' || registreForm.password == '' || registreForm.email == '' || registreForm.confirmPassword == '') {
+      if (registreForm.username == '' || registreForm.password == '' || registreForm.confirmPassword == '') {
         ElMessage.error("请填完整注册表单")
         return
       }
+      if (registreForm.email == '' || !registreForm.email.match(/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)) {
+        ElMessage.error("请输入邮箱")
+        return 
+      } 
+
       if (registreForm.confirmPassword !== registreForm.password) {
         ElMessage.error("密码与确认密码不一致.")
         return
@@ -166,55 +174,55 @@ export default {
           delete registreForm[key]
         })
 
-      }).catch((err) => {
-
-      });
+      }).catch((err) => { });
 
     }
 
     // 获取登录用户信息
-    function getUserInfo(){
+    function getUserInfo() {
       api.getUserInfo().then((result) => {
         const userInfo = JSON.stringify(result.data)
-        sessionStorage.setItem('userInfo',userInfo)
+        sessionStorage.setItem('userInfo', userInfo)
         Router.go(-1)
       }).catch((err) => {
-        
+
       });
     }
 
     // 获取登录HR信息
-    function getHRInfo(){
+    function getHRInfo() {
       api.getHRInfo().then((result) => {
         const userInfo = JSON.stringify(result.data)
-        sessionStorage.setItem('userInfo',userInfo)
+        sessionStorage.setItem('userInfo', userInfo)
         Router.push("/hrindex")
       }).catch((err) => {
-        
+
       });
     }
 
     // 获取登录的用户类型
-    function getType(){
-      const type =Route.query.type
-      if(type){
+    function getType() {
+      const type = Route.query.type
+      if (type) {
         loginForm.type = type
-      }else{
-        // loginForm.type = 4
+        const hrInfo = JSON.parse(localStorage.getItem("hrInfo"))
+        if (hrInfo) {
+          loginForm.name = hrInfo.name
+          loginForm.pwd = hrInfo.pwd
+        }
+      } else {
+        loginForm.type = 4
         const userInfo = JSON.parse(localStorage.getItem("userInfo"))
-      if(userInfo){
-        loginForm.name = userInfo.name
-        loginForm.pwd = userInfo.pwd
-        loginForm.type = userInfo.type
-      } 
+        if (userInfo) {
+          loginForm.name = userInfo.name
+          loginForm.pwd = userInfo.pwd
+        }
       }
-      console.log(loginForm.type)
-     
-      
     }
 
-    onMounted(()=>{
-         getType()
+
+    onMounted(() => {
+      getType()
     })
 
     return {
@@ -235,7 +243,7 @@ export default {
 <style lang="less" scoped>
 .layout {
   position: absolute;
-  left:20%;
+  left: 20%;
   top: 20%;
   width: 840px;
   border: 2px solid gray;
@@ -266,10 +274,12 @@ export default {
   .img_local {
     margin: auto;
     width: 400px;
-    h2{
+
+    h2 {
       margin-top: 10px;
     }
-    img{
+
+    img {
       border-radius: 20px;
       width: 400px;
     }
@@ -281,7 +291,6 @@ export default {
   float: right;
   margin-right: 30px;
 }
-
 
 .lg-style {
   width: 280px;
@@ -313,7 +322,6 @@ export default {
     border: 2px solid #ff6400;
   }
 }
-
 .checkBox {
   margin-left: 14px;
 }

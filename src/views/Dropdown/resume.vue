@@ -518,9 +518,9 @@ export default {
   setup() {
 
     const resumeInfo = {
-      personalSummary: '优秀的人',
-      ability: '会Java开发个大头鬼',
-      jobIntention: 'java开发',
+      personalSummary: '',
+      ability: '',
+      jobIntention: '',
       performance: '',
       value: '3',
     }

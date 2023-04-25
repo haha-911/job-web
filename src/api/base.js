@@ -14,6 +14,18 @@ const api = {
             
         })
     },
+    getHotPosition(){
+        return service({
+            url:`${api_name}/position/hotPos`,
+            method:'post'       
+        })
+    },
+    getHotCompany(){
+        return service({
+            url:`${api_name}/company/hotCom`,
+            method:'post'       
+        })
+    },
     getCategoryList(){
         return service({
             url:`${api_name}/category/all`,

@@ -123,7 +123,7 @@
         })
         window.open(goCompany.href, '_blank')
       }
-    //   换页
+      // 换页
       const handleCurrentChange = (val) =>{
         requestParam.page = val
         getInterviewData()

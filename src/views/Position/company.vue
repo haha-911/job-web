@@ -1,5 +1,8 @@
 <template>
+
+
   <div class="d-nav" :class="{ hasFixed: needFixed }">
+
     <div style="height: 20px"></div>
 
     <div style="width: 70%; margin: auto">
@@ -10,7 +13,6 @@
           <span @click="isRecruit = true" :class="{ hoverColor: isRecruit }">热招职位({{ total }})</span>
         </div>
       </div>
-
       <div class="nav-button">
         <button class="but-right" v-if="isFollow" @click="addFollow">关注公司</button>
         <button class="but-right" v-else @click="cancelFollow">已关注</button>
@@ -33,7 +35,7 @@
 
       <div class="right-img">
         <!-- <img src="../../assets/nofound.png" alt="" /> -->
-        <el-image :src="companyInfo.logo"></el-image>
+        <el-image :src="companyInfo.logo" class="img"></el-image>
       </div>
     </div>
 
@@ -123,6 +125,7 @@
       </el-col>
     </el-row>
   </div>
+
 </template>
 
 <script>
@@ -140,6 +143,7 @@ import { ElMessage } from "element-plus";
 import bus from 'vue3-eventbus'
 export default {
   setup() {
+    
     const requestParam = {
       page: 1,
       pageSize: 6,
@@ -154,7 +158,8 @@ export default {
       total:0,
       needFixed: false,
       isRecruit: false,
-    });
+    })
+
     const Route = useRoute();
 
     const Router = useRouter()
@@ -169,6 +174,7 @@ export default {
         }
         })
     }
+
      // 点击跳转职位详情
      const positionDetails = (item) => {
       const goPosition = Router.resolve({
@@ -272,7 +278,7 @@ export default {
       getPositionList,
       positionDetails,
       requestParam,
-    };
+    }
   },
 };
 </script>
@@ -283,7 +289,6 @@ export default {
   height: 500px;
   margin: auto;
 }
-
 .hasTop {
   display: none;
 }
@@ -379,7 +384,7 @@ export default {
     width: 34%;
     margin: 20px 20px 10px 0px;
 
-    img {
+    .img {
       width: 360px;
       height: 240px;
       border-radius: 10px;
@@ -530,5 +535,7 @@ export default {
   width: 70%;
   height: auto;
 }
+
+
 </style>>
 

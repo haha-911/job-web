@@ -63,6 +63,7 @@
     </div>
 
   </div>
+
   <div style="margin:20px auto"></div>
 
   <!-- 职位列表页面 -->
@@ -129,6 +130,7 @@
       </div>
     </el-col>
   </el-row>
+
   </div>
 </template>
 
@@ -165,6 +167,7 @@ export default {
     }
 
     const key = ref("")
+    
     // 引用数据
     const state = reactive({
       positionList: [],
@@ -213,19 +216,16 @@ export default {
     // 选择学历
     const selectEducation=(val)=>{
       requestParam.diploma = val
-      console.log(requestParam);
     }
     // 选择分类
     const selectCategory=(val)=>{
       requestParam.categoryId = val
       getPositionList()
-      console.log(requestParam);
     }
 
     // 选择薪资
     const salaryColor = (item, index) => {
       state.salaryIndex = index
-
       if(index == 0){
         requestParam.maxSalary = ''
         requestParam.minSalary = ''
@@ -252,7 +252,6 @@ export default {
         requestParam.maxSalary = ''
       }
       getPositionList() 
-    console.log(requestParam);
     }
 
     // 选择发布时间
@@ -272,7 +271,6 @@ export default {
         
       }
       getPositionList() 
-      console.log(requestParam);
 
     }
 
@@ -294,7 +292,8 @@ export default {
         value: '4',
         label: '研究生',
       },
-    ]  
+    ]
+
     // 点击跳转职位详情
     const positionDetails = (item) => {
       const goPosition = router.resolve({
@@ -442,7 +441,6 @@ export default {
   }
 
 }
-
 
 .hasFixed {
   background-color: #fff;

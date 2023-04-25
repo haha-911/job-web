@@ -92,6 +92,7 @@ export default {
     { state: '1', value: '面试邀约' },
     { state: '0', value: '不合适' }]
 
+    // 切换申请状态
     const getSelect = (item, index) => {
       defaultBut.value = index
       requestParam.state = item.state
@@ -99,8 +100,8 @@ export default {
 
     }
 
+    // 跳转面试页
     const goInterview = () =>{
-
       router.push("/interview")
     }
 
@@ -145,6 +146,7 @@ export default {
       })
       window.open(goCompany.href, '_blank')
     }
+    // 切换页面
     const handleCurrentChange = (val) =>{
       requestParam.page = val
       getApplyData()

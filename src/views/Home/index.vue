@@ -2,25 +2,6 @@
 
   <div style="width:75%;height:auto;margin:auto">
 
-    <!-- 搜索模块 -->
-  <el-row :gutter="20">
-  
-    <!-- 搜索区域 -->
-    <el-col :span="16">
-      <div class="grid-content ep-bg-purple" />
-      <!-- 搜索框 -->
-      <div class="search" >
-        <div class="search-inner" >
-          <input class="search-input" v-model="key" placeholder="搜索职位/公司/内容关键词" />
-          <button color="#ff6400" class="search-button" @click="searchPosition">搜索</button>
-        </div>
-      </div>
-    </el-col>
-    <el-col :span="8">
-      <div class="grid-content ep-bg-purple" />expect
-    </el-col>
-  </el-row>
-
   <div style="margin:30px auto"></div>
 
   <el-row :gutter="20">
@@ -33,6 +14,7 @@
       <div class="expect" :class="{ 'hasFixed': needFixed == true }">
 
         <div style="height:15px"></div>
+
         <div class="expect-value">
           <span @click="hoverColor(item,idx)" :class="idx==index?'hover-color':''" v-for="(item,idx) in expectList" :key="idx">{{item}}</span>
         </div>
@@ -48,12 +30,10 @@
         <button @click="getButtonValue(true,0)" :class="{'font-color':isHiddenButtonValue}">推荐</button>
           <button @click="getButtonValue(false,1)" :class="{'font-color':!isHiddenButtonValue}">最新</button>
         </div>
-
-
-
       </div>
 
       <div style="height:20px"></div>
+
       <!-- 职位列表 -->
       <div>
         <ul>
@@ -63,17 +43,12 @@
                 <h3>{{ item.title }}&nbsp;【{{ item.city }}】<b>{{ item.salaryDown }}-{{ item.salaryUp }}</b></h3>
                 <p>{{ item.requirement }}</p>
               </div>
-
-              <div class="company-info" @click="companyDetails(item)">
-
+              <div class="company-info" @click="companyDetails(item.companyId)">
                 <div class="small-logo">
                   <!-- <img src="../../assets/baseavatar.jpg" alt="" style="width: 22px;height: 22px;"> -->
                   <el-image style="width: 22px;height: 22px;" :src="item.logo" />
                 </div>
-                
-
                 <span><b>{{ item.companyName }}</b></span>
-
                 <span><el-divider direction="vertical" /></span>
                 <span>{{ item.releaseDate }}</span>
                 <span>{{ item.quantity - 1 }}~{{ item.quantity + 3 }}人</span>
@@ -95,7 +70,6 @@
         <div style="height:100px"></div>
         <img src="../../assets/nofound.png" alt="" style="width:274px;height:200px">
         <p>非常抱歉！暂时没有合适的职位</p>
-
       </div>
 
       <!-- 分页 -->
@@ -108,7 +82,26 @@
 
     <!-- 页面右侧模块 -->
     <el-col :span="8">
-      <div class="grid-content ep-bg-purple" />
+      <div class="grid-content ep-bg-purple" /> 
+     
+      <h2>热门职位</h2>
+      <div class="hot_pos">
+        <ul>
+          <li v-for="(item,index) in hotPosList" v-bind:key="index" @click="positionDetails(item)" >
+            <span class="left_span">{{item.title}} 【{{item.city}}】</span>
+            <span class="right_span">{{item.salaryDown}}~{{item.salaryUp}}</span>
+          </li>
+        </ul>
+      </div>
+
+      <h2>热门公司</h2>
+      <div class="hot_com">
+        <ul>
+          <li v-for="(item,index) in hotComList" v-bind:key="index" @click="companyDetails(item.id)" >
+            <el-image :src="item.logo" class="img"></el-image>
+          </li>
+        </ul>
+      </div>
     </el-col>
   </el-row>
 </div>
@@ -129,7 +122,7 @@ export default {
     // 请求参数
     const requestParam = {
       page: 1,
-      pageSize: 7,
+      pageSize: 11,
       name: '',
       sortCondition: 0
     }
@@ -140,14 +133,14 @@ export default {
 
     const  expectList = ref(['全部'])
 
-
-
     // 获取路由
     const Router = useRouter()
 
     // 引用数据
     const state = reactive({
       userInfo,
+      hotPosList: [],
+      hotComList:[],
       positionList: [],
       index: 0,
       total: 0,
@@ -170,12 +163,28 @@ export default {
       getPositionList()
     }
 
+    // 获取热门职位
+    const getHotPosition = ()=>{
+      api.getHotPosition().then((result) => {
+        state.hotPosList = result.data    
+      }).catch((err) => {});
+
+    }
+
+    // 获取热门公司
+    const getHotCompany = ()=>{
+      api.getHotCompany().then((result) => {
+        state.hotComList = result.data    
+      }).catch((err) => {});
+
+    }
+
     // 跳转我的简历页面，添加求职期望
     const goResume=()=>{
       Router.push("/resume")
     }
 
-    // 搜索期望职位
+    // 根据求职期望获取职位
     const hoverColor=(item,idx)=>{
         state.index = idx
         state.isHiddenButtonValue = true
@@ -186,7 +195,6 @@ export default {
           requestParam.name = item
         }
         getPositionList()
-        console.log(requestParam);
     }
 
     // 监听滚动距离
@@ -213,16 +221,11 @@ export default {
 
       const goCompany = Router.resolve({
         name:'company',
-        params:{id:item.companyId}
+        params:{id:item}
       })
       window.open(goCompany.href,'_blank')
     }
     
-    //  搜索按钮
-    const searchPosition = () => {
-      bus.emit('key',key.value)
-      Router.push('/position')
-    }
     // 改变当前页
     const handleCurrentChange = (val) => {
       console.log(`current page: ${val}`)
@@ -246,6 +249,7 @@ export default {
       state.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     }
 
+    // 获取用户求职期望
     const getUserExpect = () =>{
       getUserInfo()
       if(state.userInfo != null){
@@ -261,8 +265,11 @@ export default {
 
     onMounted(() => {
       getPositionList()
+      getHotPosition()
+      getHotCompany()
       handleScroll()
     })
+
     return {
       ...toRefs(state),
       expectList,
@@ -275,7 +282,6 @@ export default {
       handleCurrentChange,
       positionDetails,
       companyDetails,
-      searchPosition,
     }
 
   }
@@ -346,6 +352,42 @@ export default {
   
 }
 
+.hot_pos {
+  
+  margin-top: 20px;
+  li{
+  background-color: #fff;
+  margin-bottom: 20px;
+  height:40px;
+  border-radius: 5px;
+  line-height: 40px;
+  .left_span{
+    font-weight: bolder;
+    float: left;
+    margin-left: 8px;
+  }
+  .right_span{
+    float: right;
+    margin-right: 15px;
+    color: #ff6400;
+  }
+  }
+
+}
+
+.hot_com {
+  margin-top: 20px;
+  li{
+    margin-bottom: 20px;
+    .img{
+      height: 200px;
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+ 
+  
+}
 
 .hasFixed {
   margin-left: 184px;
@@ -420,44 +462,5 @@ export default {
 }
 }
 
-.search {
-  height: 60px;
-  margin-top: 20px;
- 
-  .search-inner {
-    height: 50px;
-    border-radius: 40px;
-    background-color: #fff;
-    box-shadow: 0px 0px 10px 5px #aaa;
-  
-  }
-  .search-inner:hover {
-    border: 2px solid #ff6400;
-  }
-  .search-input {
-    width: 600px;
-    height: 30px;
-    margin-top: 10px;
-    margin-left: 10px;
-    outline: none;
-    border: none;
-  
-  }
-  .search-button {
-    float: right;
-    color: #fff;
-    font-size: 16px;
-    margin-right: 10px;
-    margin-top: 5px;
-    border-radius: 40px;
-    width: 75px;
-    height: 40px;
-    line-height: 20px;
-    border: none;
-    background-color: #ff6400;
-  
-  }
-  
-}
 
 </style>

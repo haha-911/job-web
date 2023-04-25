@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { onBeforeUnmount, onMounted, reactive, ref, toRefs } from "@vue/runtime-core";
+import {  onMounted, reactive, ref, toRefs } from "@vue/runtime-core";
 import { useRoute, useRouter } from "vue-router";
 import api from '@/api/base'
 import favor from '@/api/favor'
@@ -156,7 +156,6 @@ export default{
 
     // 收藏职位
     const addFavor = () =>{
-
       if(!state.userInfo){
         ElMessage.warning("请登录后操作")
         return
@@ -313,10 +312,6 @@ export default{
   }
 
 }
-   
-
-
-  
 
 </script>
 
@@ -449,5 +444,6 @@ export default{
     }
   }
 }
+
 </style>>
 

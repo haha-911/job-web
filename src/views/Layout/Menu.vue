@@ -1,5 +1,7 @@
 <template>
         <div>
+
+            <!-- 首页导航条 -->
             <el-menu :default-active="route.path" class="el-menu-demo elmenu" mode="horizontal"
                 background-color="#212329" text-color="#fff"  active-text-color="#ff6400" @select="handleSelect" router>
                 <a href="#" @click="returnIndex"><img src="../../assets/liepin.png" alt="" class="logoimg"></a>
@@ -17,7 +19,7 @@
                     <span class="el-dropdown-link" >
                         你好！<i class="nickname">{{userInfo.username}}</i>
                     </span>
-                    <template #dropdown style="margin-bottom:20px">
+                    <template #dropdown >
                         <el-dropdown-menu >
                             <el-dropdown-item command="myresume">我的简历</el-dropdown-item>
                             <el-dropdown-item command="apply">我的投递</el-dropdown-item>
@@ -65,7 +67,7 @@ export default {
         const returnIndex = () => {
             router.push("/")
         }
-
+        // 跳转hr登录页面
         const hrLogin= ()=>{
             router.push({
                 name:'login',
@@ -79,12 +81,13 @@ export default {
         const getUserInfo=()=>{
             const hh = sessionStorage.getItem('userInfo')
             if(hh){
-                userInfo.value = JSON.parse(hh)
-            isLogin.value = true 
+              userInfo.value = JSON.parse(hh)
+              isLogin.value = true 
             }
        
             
         }
+
         // 下拉菜单点击事件
         const handleCommand = (command) => {
             if (command == 'loginout') {

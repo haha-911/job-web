@@ -38,7 +38,6 @@
 
 <script>
 
-import { getConstantType } from '@vue/compiler-core';
 import { useRoute } from 'vue-router';
 import { bus } from 'vue3-eventbus';
 import { ref } from '@vue/reactivity';
@@ -109,10 +108,6 @@ export default {
         background-color: #fff;
         color: #ff6400
     }
-
-
-
-
 }
 
 .r-content {

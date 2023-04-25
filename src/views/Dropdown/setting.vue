@@ -1,40 +1,40 @@
 <template>
-    <div class="s-body" >
+    <div class="s-body">
 
-        <div class="s-left" >
+        <div class="s-left">
+            <!-- 侧栏 -->
             <span class="title">账号设置</span>
-            <span :class="{'isFixed':tf.isName}" @click="editName">我的昵称</span>
-            <span :class="{'isFixed':tf.isTel}" @click="editTel">手机号码</span>
-            <span :class="{'isFixed':tf.isEmail}" @click="editEmail">我的邮箱</span>
-            <span :class="{'isFixed':tf.isPwd}" @click="editPwd">密码设置</span>
+            <span :class="{ 'isFixed': tf.isName }" @click="editName">我的昵称</span>
+            <span :class="{ 'isFixed': tf.isTel }" @click="editTel">手机号码</span>
+            <span :class="{ 'isFixed': tf.isEmail }" @click="editEmail">我的邮箱</span>
+            <span :class="{ 'isFixed': tf.isPwd }" @click="editPwd">密码设置</span>
         </div>
-
+        <!--  -->
         <div class="s-right">
             <div class="nickname">
                 <h3>我的昵称</h3>
-                <p>当前昵称:{{userInfo.nickname}}</p>
+                <p>当前昵称:{{ userInfo.nickname }}</p>
                 <button @click="editName">修改昵称</button>
             </div>
             <div class="nickname">
                 <h3>手机号码</h3>
-                <p>当前号码:{{userInfo.tel}}</p>
+                <p>当前号码:{{ userInfo.tel }}</p>
                 <button @click="editTel">修改号码</button>
             </div>
             <div class="nickname">
                 <h3>我的邮箱</h3>
-                <p>当前邮箱:{{userInfo.email}}</p>
+                <p>当前邮箱:{{ userInfo.email }}</p>
                 <button @click="editEmail">修改邮箱</button>
             </div>
             <div class="nickname">
                 <h3>密码设置</h3>
-                <p>登录用户:{{userInfo.username}}</p>
+                <p>登录用户:{{ userInfo.username }}</p>
                 <button @click="editPwd">修改密码</button>
             </div>
         </div>
-        <!-- 编辑框 -->
+        <!-- 弹出编辑框 -->
         <el-dialog v-model="tf.dialogVisible" :title="title" width="30%">
-            <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="80px" class="demo-ruleForm"
-                status-icon>
+            <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="80px" class="demo-ruleForm" status-icon>
                 <el-form-item label="用户昵称" prop="nickname" v-if="tf.isName">
                     <el-input v-model="form.nickname" />
                 </el-form-item>
@@ -43,11 +43,11 @@
                 </el-form-item>
                 <el-form-item label="电子邮箱" prop="email" v-if="tf.isEmail">
                     <el-input v-model="form.email" style="width:254px;" />
-                    
+
                 </el-form-item>
                 <el-form-item label="验证码" prop="code" v-if="tf.isEmail">
-                    <el-input v-model="form.code" style="width:140px"/>
-                    <el-button @click="getCode" style="margin-left:10px">{{content}}</el-button>
+                    <el-input v-model="form.code" style="width:140px" />
+                    <el-button @click="getCode" style="margin-left:10px">{{ content }}</el-button>
                 </el-form-item>
                 <el-form-item label="旧密码" prop="oldPwd" v-if="tf.isPwd">
                     <el-input v-model="form.oldPwd" type="password" autocomplete="off" />
@@ -82,17 +82,18 @@ import { bus } from 'vue3-eventbus'
 const title = ref('修改昵称')
 
 const content = ref('发送验证码')
+
 const tf = reactive({
     dialogVisible: false,
-    isEmail:false,
-    isPwd:false,
-    isName:false,
-    isTel:false,
-    needFixed:false,
+    isEmail: false,
+    isPwd: false,
+    isName: false,
+    isTel: false,
+    needFixed: false,
 })
 
 const form = reactive({
-    id:0,
+    id: 0,
     nickname: '',
     email: '',
     code: '',
@@ -104,13 +105,13 @@ const form = reactive({
 
 const clear = () => {
     Object.keys(form).map(key => {
-      delete form[key]
+        delete form[key]
     })
 
-    Object.keys(tf).map(key=>{
+    Object.keys(tf).map(key => {
         tf[key] = false
     })
-  }
+}
 const editName = () => {
     clear()
     tf.isName = true
@@ -136,48 +137,42 @@ const editPwd = () => {
 }
 const ruleFormRef = ref(FormInstance)
 
-const  userInfo = ref({})
+const userInfo = ref({})
 
-const getUserInfo = () =>{
+// 获取用户信息
+const getUserInfo = () => {
     api.getUserInfo().then((result) => {
         userInfo.value = result.data
-    }).catch((err) => {
-        
-    });
-
+    }).catch((err) => {});
 }
 
-const getCode = () =>{
-    if(form.email == null){
+// 获取修改邮箱验证码
+const getCode = () => {
+    if (form.email == null) {
         alert("请输入邮箱地址！")
-        return 
+        return
     }
-    if(!form.email.match(/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)){
+    if (!form.email.match(/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/)) {
         alert("请输入合法的邮箱地址！")
-        return 
+        return
     }
+    const email = { email: form.email }
+    userApi.sendCode(email).then(result => {
 
-    console.log(form.email);
-    const email = {
-        email:form.email
-    }
-
-               let totalTime = 60
-               let clock =  window.setInterval(() => {
+        if (result.success) {
+            ElMessage.success(result.msg)
+            let totalTime = 60
+            let clock = window.setInterval(() => {
                 content.value = totalTime + 's后重新发送';
-                totalTime --;
-                if(totalTime < 0){
+                totalTime--;
+                if (totalTime < 0) {
                     totalTime = 60;
                     content.value = "重新发送验证码";
                     window.clearInterval(clock);
                 }
             }, 1000);
-            ElMessage.success("验证码已发送！")
-
-    userApi.sendCode(email).then( result =>{
-            ElMessage.success(result.msg)
+        }
     })
-
 }
 
 const validatePass = (rule, value, callback) => {
@@ -201,6 +196,7 @@ const validatePass2 = (rule, value, callback) => {
     }
 }
 
+// 验证规则
 const rules = reactive({
     nickname: [
         { required: true, message: '请输入昵称', trigger: 'blur' },
@@ -226,52 +222,54 @@ const rules = reactive({
 
 const router = useRouter()
 
+// 提交数据
 const submitForm = (formEl) => {
 
     if (!formEl) return
-     formEl.validate((valid, fields) => {
+    formEl.validate((valid, fields) => {
         if (valid) {
             form.id = userInfo.value.id
-            if(!tf.isPwd){
+            // 修改基本信息
+            if (!tf.isPwd) {
                 api.updateUser(form).then((result) => {
-                ElMessage.success(result.msg)
-                getUserInfo()
-            }).catch((err) => {
-                
-            });
+                    if (result.success) {
+                        ElMessage.success(result.msg)
+                        getUserInfo()
+
+                        tf.dialogVisible = false
+                        clear()
+                    }
+
+                }).catch((err) => {});
             }
-            if(tf.isPwd){
+            // 修改密码信息
+            if (tf.isPwd) {
                 api.changePwd(form).then((result) => {
-                    ElMessage.success(result.msg+"请重新登录！")
+                    ElMessage.success(result.msg + "请重新登录！")
                     sessionStorage.clear()
                     router.push('/login')
-                }).catch((err) => {
-                    
-                });
+                }).catch((err) => {});
             }
-            tf.dialogVisible = false
-            clear()
-        } 
+
+        }
     })
 }
 
-const handleScroll = () =>{
-    bus.on('topValue', (top)=>{
-          if (top> 100) {
-          tf.needFixed = true
+const handleScroll = () => {
+    bus.on('topValue', (top) => {
+        if (top > 100) {
+            tf.needFixed = true
         } else {
-          tf.needFixed = false
+            tf.needFixed = false
         }
-        })
+    })
 }
-
-
 
 const resetForm = (formEl) => {
     if (!formEl) return
     formEl.resetFields()
 }
-onMounted(()=>{
+onMounted(() => {
     getUserInfo()
     handleScroll()
 })
@@ -280,10 +278,10 @@ onMounted(()=>{
 </script>
 
 <style lang="less" scoped>
-
-.isFixed{
-  background-color: #fff4e6;
+.isFixed {
+    background-color: #fff4e6;
 }
+
 .s-body {
     width: 80%;
     height: 460px;
@@ -303,8 +301,9 @@ onMounted(()=>{
         font-size: 18px;
         font-weight: 800;
     }
-    .title:hover{
-        color:rgb(0, 0, 0)
+
+    .title:hover {
+        color: rgb(0, 0, 0)
     }
 
     span {
@@ -335,11 +334,12 @@ onMounted(()=>{
 
     .nickname {
         width: 400px;
-       
+
         border-bottom: 2px solid #e6eaf1;
         margin-left: 30px;
         margin-top: 40px;
         float: left;
+
         p {
             margin-top: 10px;
             margin-bottom: 20px;
